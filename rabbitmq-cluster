@@ -17,9 +17,13 @@ else
 
   rabbitmqctl set_policy ha-all "." '{"ha-mode":"all", "ha-sync-mode":"automatic"}' --priority 0
 
+  rabbitmqctl add_vhost /support
+
   rabbitmqctl add_user $RABBITMQ_DEFAULT_USER $RABBITMQ_DEFAULT_PASS
   rabbitmqctl set_user_tags $RABBITMQ_DEFAULT_USER administrator
   rabbitmqctl set_permissions -p / $RABBITMQ_DEFAULT_USER ".*" ".*" ".*"
+  rabbitmqctl set_permissions -p /support $RABBITMQ_DEFAULT_USER ".*" ".*" ".*"
+
   rabbitmqctl delete_user guest
 
   # Tail to keep the a fore2ground process active..
