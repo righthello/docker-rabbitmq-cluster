@@ -14,8 +14,14 @@ else
   echo "Joining cluster $CLUSTER_WITH"
   rabbitmqctl join_cluster ${ENABLE_RAM:+--ram} $RABBITMQ_NODENAME@$CLUSTER_WITH
   rabbitmqctl start_app
+
   rabbitmqctl set_policy ha-all "." '{"ha-mode":"all", "ha-sync-mode":"automatic"}' --priority 0
 
-  # Tail to keep the a foreground process active..
+  rabbitmqctl add_user $RABBITMQ_DEFAULT_USER $RABBITMQ_DEFAULT_PASS
+  rabbitmqctl set_user_tags $RABBITMQ_DEFAULT_USER administrator
+  rabbitmqctl set_permissions -p / $RABBITMQ_DEFAULT_USER ".*" ".*" ".*"
+  rabbitmqctl delete_user guest
+
+  # Tail to keep the a fore2ground process active..
   tail -f /var/log/rabbitmq/*
 fi
